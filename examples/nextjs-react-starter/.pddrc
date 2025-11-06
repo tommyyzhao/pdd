@@ -1,0 +1,11 @@
+# .pddrc - PDD Configuration for NextJS React Starter
+version: "1.0"
+contexts:
+  default:
+    defaults:
+      generate_output_path: "pdd/"
+      test_output_path: "tests/"
+      example_output_path: "examples/"
+      default_language: "typescript"
+      target_coverage: 80.0
+      strength: 0.75
