@@ -16,8 +16,7 @@ This example demonstrates building a modern NextJS 16 / React 19 application usi
 ```
 nextjs-react-starter/
 ├── prompts/                       # PDD prompt files (source of truth)
-│   ├── counter_typescript.prompt
-│   └── counter_story_typescript.prompt
+│   └── Counter_TypeScriptReact.prompt
 ├── pdd/                          # Generated code from prompts
 │   ├── Counter.tsx
 │   └── Counter.stories.tsx
@@ -101,14 +100,17 @@ cd /home/user/pdd/examples/nextjs-react-starter
 # Activate pdd environment
 source ../../.venv/bin/activate
 
-# Generate Counter component from prompt
-pdd --local generate prompts/counter_typescript.prompt
-
-# Generate Storybook story from prompt
-pdd --local generate prompts/counter_story_typescript.prompt
+# Generate Counter component with Storybook story using sync
+# This generates both Counter.tsx and Counter.stories.tsx
+pdd --local --force sync Counter
 ```
 
 The generated files will appear in the `pdd/` directory.
+
+**Important**:
+- Use `TypeScriptReact` as the language suffix for React components to get `.tsx` files
+- Use `sync` instead of `generate` to get component + stories + tests (the "dev unit")
+- Capitalize the basename (`Counter` not `counter`) for React components
 
 ### Step 5: Install NextJS Dependencies
 
@@ -150,21 +152,33 @@ bun run storybook
 
 ### Example: Counter Component
 
-**Prompt** (`prompts/counter_typescript.prompt`):
-```
-Create a Counter React component in TypeScript that demonstrates basic state management and user interaction.
+**Single Prompt** (`prompts/Counter_TypeScriptReact.prompt`) generates both component and story:
 
-Requirements:
-- Use TypeScript with proper type annotations
-- Use React hooks (useState) for state management
-- Export as a named export "Counter"
-- Component should have:
-  * A heading displaying "Counter Demo"
-  * A display showing the current count value
-  * An increment button labeled "Increment"
-  * A decrement button labeled "Decrement"
-  * A reset button labeled "Reset" that sets count back to 0
-...
+```
+You are an expert React and TypeScript developer building a modern Counter
+component using React 19 with TypeScript, Tailwind CSS v4, and Storybook 8.
+
+## Requirements
+
+1. **Component (`Counter.tsx`)**:
+   - Export as named export `Counter`
+   - Use React 19 hooks (`useState`)
+   - Client component (add 'use client' directive)
+
+2. **Component Features**:
+   - Display heading "Counter Demo"
+   - Show current count value
+   - Three buttons: Decrement, Reset, Increment
+
+3. **Storybook Story (`Counter.stories.tsx`)**:
+   - Use Storybook 8 CSF3 format
+   - Meta with title "Components/Counter"
+   - At least one Default story
+
+## Deliverables
+Generate two files:
+1. Counter.tsx - The React component
+2. Counter.stories.tsx - The Storybook story
 ```
 
 **Generated Code** (`pdd/Counter.tsx`):
@@ -202,22 +216,7 @@ export function Counter() {
 
 ### Storybook as "UI Tests"
 
-In PDD, Storybook stories serve as the UI equivalent of unit tests - they verify the visual behavior and document component usage.
-
-**Story Prompt** (`prompts/counter_story_typescript.prompt`):
-```
-Create a Storybook story file for the Counter component in TypeScript.
-
-Requirements:
-- Use Storybook 8.x format with CSF3 (Component Story Format 3)
-- TypeScript with proper type annotations
-- Import the Counter component from "./Counter"
-- Define the meta configuration with:
-  * title: "Components/Counter"
-  * component: Counter
-  * tags: ['autodocs']
-...
-```
+In PDD, Storybook stories serve as the UI equivalent of unit tests - they verify the visual behavior and document component usage. **Stories are generated together with the component** in a single prompt, following the PDD "dev unit" principle (one prompt → code + examples + tests).
 
 **Generated Story** (`pdd/Counter.stories.tsx`):
 ```typescript
@@ -282,13 +281,13 @@ When requirements change, update the prompt and regenerate:
 
 ```bash
 # 1. Edit the prompt file
-vim prompts/counter_typescript.prompt
+vim prompts/Counter_TypeScriptReact.prompt
 
-# 2. Regenerate with --force flag
-pdd --local --force generate prompts/counter_typescript.prompt
+# 2. Regenerate with sync --force
+pdd --local --force sync Counter
 
-# 3. Copy updated component to app
-cp pdd/Counter.tsx app/components/
+# 3. Copy updated files to app
+cp pdd/Counter.tsx pdd/Counter.stories.tsx app/components/
 ```
 
 ## 🧪 Testing
@@ -317,10 +316,10 @@ bun run storybook
 
 This is an example project demonstrating PDD methodology. To extend it:
 
-1. Create new prompt files in `prompts/`
-2. Generate components with `pdd generate`
-3. Integrate generated code into the NextJS app
-4. Create Storybook stories for documentation
+1. Create new prompt files in `prompts/` using `ComponentName_TypeScriptReact.prompt` naming
+2. Generate components with `pdd --local --force sync ComponentName`
+3. Copy generated files from `pdd/` to `app/components/`
+4. Stories and tests are generated together with the component (dev unit principle)
 
 ## 📄 License
 
@@ -329,11 +328,11 @@ This example is part of the PDD project and follows the same MIT license.
 ## ⚡️ Quick Reference
 
 ```bash
-# Generate from prompt
-pdd --local generate prompts/your_component_typescript.prompt
+# Generate component with sync (component + stories + tests)
+pdd --local --force sync YourComponent
 
-# Generate with sync (includes tests, examples, verification)
-pdd --local sync prompts/your_component_typescript.prompt --force
+# Prompt file should be: prompts/YourComponent_TypeScriptReact.prompt
+# Generates: pdd/YourComponent.tsx and pdd/YourComponent.stories.tsx
 
 # Run NextJS dev server
 bun run dev

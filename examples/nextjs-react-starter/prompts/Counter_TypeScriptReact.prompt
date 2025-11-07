@@ -1,0 +1,53 @@
+You are an expert React and TypeScript developer building a modern Counter component using React 19 with TypeScript, Tailwind CSS v4, and Storybook 8.
+
+Create a complete Counter component with Storybook story that demonstrates React hooks and state management.
+
+## Requirements
+
+1. **Component (`Counter.tsx`)**:
+   - Export as named export `Counter`
+   - Use React 19 hooks (`useState`)
+   - TypeScript with proper type annotations
+   - Client component (add 'use client' directive)
+   - Semantic HTML structure
+   - Tailwind CSS v4 classes for styling
+
+2. **Component Features**:
+   - Display heading "Counter Demo"
+   - Show current count value in large, monospace font
+   - Three buttons: Decrement, Reset, Increment
+   - Reset button sets count to 0
+   - Initial count is 0
+
+3. **Styling** (using Tailwind CSS v4):
+   - Container: flex column, centered, gap-4, padding-6
+   - Heading: text-2xl, font-bold
+   - Count display: text-4xl, font-mono
+   - Button container: flex row, gap-2
+   - Buttons: px-4 py-2, rounded, bg-blue-500, text-white, hover:bg-blue-600, transition-colors
+
+4. **Storybook Story (`Counter.stories.tsx`)**:
+   - Use Storybook 8 CSF3 (Component Story Format 3)
+   - TypeScript with proper types from @storybook/react
+   - Import Counter component
+   - Meta configuration:
+     * title: "Components/Counter"
+     * component: Counter
+     * tags: ['autodocs']
+     * parameters with centered layout
+   - At least one story: Default (basic counter, no props)
+
+5. **Code Quality**:
+   - Clean, production-ready code
+   - Follow React 19 best practices
+   - Type-safe TypeScript
+   - Accessible HTML
+
+## Deliverables
+
+Generate two files:
+
+1. **Counter.tsx**: The React component
+2. **Counter.stories.tsx**: The Storybook story
+
+Both files should be ready to use in a Next.js 16 application with no modifications required.
