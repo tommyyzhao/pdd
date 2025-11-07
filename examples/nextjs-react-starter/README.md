@@ -43,29 +43,42 @@ nextjs-react-starter/
 
 ### Prerequisites
 
-1. **Node.js 20.9+** and npm
-2. **Python 3.12+** (for pdd CLI)
+1. **Node.js 24+** and **bun** package manager
+2. **uv** (Python package manager)
 3. **API Key** (one of the following):
    - `ANTHROPIC_API_KEY` (recommended - Claude Sonnet 4.5)
    - `OPENAI_API_KEY`
    - `GEMINI_API_KEY`
 
-### Step 1: Install PDD CLI
+### Step 1: Install uv and bun
+
+```bash
+# Install uv (Python package manager)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install bun (JavaScript runtime & package manager)
+curl -fsSL https://bun.sh/install | bash
+
+# Add to PATH and reload shell
+source ~/.bashrc  # or ~/.zshrc
+```
+
+### Step 2: Install PDD CLI
 
 ```bash
 # Navigate to pdd root directory
 cd /home/user/pdd
 
-# Create virtual environment and install pdd
-python3.12 -m venv .venv
+# Create virtual environment and install pdd with uv
+uv venv
 source .venv/bin/activate
-pip install -e .
+uv pip install -e .
 
 # Verify installation
 pdd --version  # Should show: pdd, version 0.0.65
 ```
 
-### Step 2: Set up API Keys
+### Step 3: Set up API Keys
 
 Choose ONE of the following:
 
@@ -80,7 +93,7 @@ export OPENAI_API_KEY="sk-..."
 export GEMINI_API_KEY="..."
 ```
 
-### Step 3: Generate Components with PDD
+### Step 4: Generate Components with PDD
 
 ```bash
 cd /home/user/pdd/examples/nextjs-react-starter
@@ -97,14 +110,14 @@ pdd --local generate prompts/counter_story_typescript.prompt
 
 The generated files will appear in the `pdd/` directory.
 
-### Step 4: Install NextJS Dependencies
+### Step 5: Install NextJS Dependencies
 
 ```bash
 cd app
-npm install
+bun install
 ```
 
-### Step 5: Copy Generated Components
+### Step 6: Copy Generated Components
 
 ```bash
 # Copy pdd-generated components to app
@@ -112,18 +125,18 @@ cp ../pdd/Counter.tsx components/
 cp ../pdd/Counter.stories.tsx components/
 ```
 
-### Step 6: Run the Application
+### Step 7: Run the Application
 
 ```bash
 # Development mode
-npm run dev
+bun run dev
 
 # Build for production
-npm run build
-npm start
+bun run build
+bun run start
 
 # Run Storybook
-npm run storybook
+bun run storybook
 ```
 
 ## 📝 PDD Methodology
@@ -235,6 +248,8 @@ export const Default: Story = {};
 | TypeScript | 5.x | Type-safe development |
 | Tailwind CSS | 4.0.0 | Utility-first CSS framework |
 | Storybook | 8.5.0 | Component development & documentation |
+| bun | 1.3.1+ | Fast JavaScript runtime & package manager |
+| uv | 0.8+ | Fast Python package manager |
 | pdd-cli | 0.0.65 | Prompt-driven development tool |
 
 ## 📚 Learn More
@@ -282,19 +297,19 @@ cp pdd/Counter.tsx app/components/
 
 ```bash
 cd app
-npm run build
+bun run build
 ```
 
 ### Storybook Build
 
 ```bash
-npm run build-storybook
+bun run build-storybook
 ```
 
 ### Run Storybook Locally
 
 ```bash
-npm run storybook
+bun run storybook
 # Open http://localhost:6006
 ```
 
@@ -321,13 +336,13 @@ pdd --local generate prompts/your_component_typescript.prompt
 pdd --local sync prompts/your_component_typescript.prompt --force
 
 # Run NextJS dev server
-npm run dev
+bun run dev
 
 # Run Storybook
-npm run storybook
+bun run storybook
 
 # Build everything
-npm run build && npm run build-storybook
+bun run build && bun run build-storybook
 ```
 
 ## 🎯 Next Steps
