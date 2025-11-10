@@ -17,17 +17,15 @@ This example demonstrates building a modern NextJS 16 / React 19 application usi
 nextjs-react-starter/
 ├── prompts/                       # PDD prompt files (source of truth)
 │   └── Counter_TypeScriptReact.prompt
-├── pdd/                          # Generated code from prompts
-│   ├── Counter.tsx
-│   └── Counter.stories.tsx
 ├── app/                          # NextJS application
 │   ├── app/                      # App router pages
 │   │   ├── layout.tsx
 │   │   ├── page.tsx
 │   │   └── globals.css
-│   ├── components/               # React components (from pdd/)
-│   │   ├── Counter.tsx
-│   │   └── Counter.stories.tsx
+│   ├── components/               # React components (pdd generates here)
+│   │   ├── Counter.tsx           # Generated from prompts/
+│   │   ├── Counter.stories.tsx   # Generated from prompts/
+│   │   └── __tests__/            # Generated tests
 │   ├── .storybook/              # Storybook configuration
 │   │   ├── main.ts
 │   │   └── preview.ts
@@ -92,7 +90,14 @@ export OPENAI_API_KEY="sk-..."
 export GEMINI_API_KEY="..."
 ```
 
-### Step 4: Generate Components with PDD
+### Step 4: Install NextJS Dependencies
+
+```bash
+cd app
+bun install
+```
+
+### Step 5: Generate Components with PDD
 
 ```bash
 cd /home/user/pdd/examples/nextjs-react-starter
@@ -101,33 +106,27 @@ cd /home/user/pdd/examples/nextjs-react-starter
 source ../../.venv/bin/activate
 
 # Generate Counter component with Storybook story using sync
-# This generates both Counter.tsx and Counter.stories.tsx
+# Files are generated directly in app/components/
 pdd --local --force sync Counter
 ```
 
-The generated files will appear in the `pdd/` directory.
+The generated files will appear directly in `app/components/`:
+- `app/components/Counter.tsx` - The component
+- `app/components/Counter.stories.tsx` - Storybook story
+- `app/components/__tests__/Counter.test.tsx` - Tests (if generated)
 
 **Important**:
 - Use `TypeScriptReact` as the language suffix for React components to get `.tsx` files
 - Use `sync` instead of `generate` to get component + stories + tests (the "dev unit")
 - Capitalize the basename (`Counter` not `counter`) for React components
-
-### Step 5: Install NextJS Dependencies
+- No manual copying needed - files generate where they're used!
 
 ```bash
 cd app
 bun install
 ```
 
-### Step 6: Copy Generated Components
-
-```bash
-# Copy pdd-generated components to app
-cp ../pdd/Counter.tsx components/
-cp ../pdd/Counter.stories.tsx components/
-```
-
-### Step 7: Run the Application
+### Step 6: Run the Application
 
 ```bash
 # Development mode
@@ -181,7 +180,7 @@ Generate two files:
 2. Counter.stories.tsx - The Storybook story
 ```
 
-**Generated Code** (`pdd/Counter.tsx`):
+**Generated Code** (`app/components/Counter.tsx`):
 ```typescript
 'use client';
 
@@ -218,7 +217,7 @@ export function Counter() {
 
 In PDD, Storybook stories serve as the UI equivalent of unit tests - they verify the visual behavior and document component usage. **Stories are generated together with the component** in a single prompt, following the PDD "dev unit" principle (one prompt → code + examples + tests).
 
-**Generated Story** (`pdd/Counter.stories.tsx`):
+**Generated Story** (`app/components/Counter.stories.tsx`):
 ```typescript
 import type { Meta, StoryObj } from '@storybook/react';
 import { Counter } from './Counter';
@@ -284,10 +283,8 @@ When requirements change, update the prompt and regenerate:
 vim prompts/Counter_TypeScriptReact.prompt
 
 # 2. Regenerate with sync --force
+# Files regenerate directly in app/components/
 pdd --local --force sync Counter
-
-# 3. Copy updated files to app
-cp pdd/Counter.tsx pdd/Counter.stories.tsx app/components/
 ```
 
 ## 🧪 Testing
@@ -318,7 +315,7 @@ This is an example project demonstrating PDD methodology. To extend it:
 
 1. Create new prompt files in `prompts/` using `ComponentName_TypeScriptReact.prompt` naming
 2. Generate components with `pdd --local --force sync ComponentName`
-3. Copy generated files from `pdd/` to `app/components/`
+3. Files generate directly in `app/components/` - no copying needed!
 4. Stories and tests are generated together with the component (dev unit principle)
 
 ## 📄 License
@@ -331,8 +328,11 @@ This example is part of the PDD project and follows the same MIT license.
 # Generate component with sync (component + stories + tests)
 pdd --local --force sync YourComponent
 
-# Prompt file should be: prompts/YourComponent_TypeScriptReact.prompt
-# Generates: pdd/YourComponent.tsx and pdd/YourComponent.stories.tsx
+# Prompt file: prompts/YourComponent_TypeScriptReact.prompt
+# Generates directly to:
+#   app/components/YourComponent.tsx
+#   app/components/YourComponent.stories.tsx
+#   app/components/__tests__/YourComponent.test.tsx
 
 # Run NextJS dev server
 bun run dev

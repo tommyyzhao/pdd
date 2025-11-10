@@ -3,8 +3,8 @@ version: "1.0"
 contexts:
   default:
     defaults:
-      generate_output_path: "pdd/"
-      test_output_path: "tests/"
+      generate_output_path: "app/components/"
+      test_output_path: "app/components/__tests__/"
       example_output_path: "examples/"
       default_language: "typescript"
       target_coverage: 80.0
