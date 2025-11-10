@@ -274,6 +274,55 @@ Tailwind v4 introduced significant changes:
 - **PostCSS plugin** - `@tailwindcss/postcss`
 - **Auto-scanning** - Automatically detects files to scan
 
+## 🎯 Flexible Output Paths
+
+pdd supports multiple output locations through **contexts** in `.pddrc`. Generate files to different directories based on their purpose:
+
+### Available Contexts
+
+```yaml
+# .pddrc
+contexts:
+  default:    # Components → app/components/
+  lib:        # Libraries → app/lib/
+  utils:      # Utilities → app/utils/
+  hooks:      # React Hooks → app/hooks/
+```
+
+### Usage Examples
+
+```bash
+# Generate a component (default context)
+pdd --local --force sync Counter
+# → app/components/Counter.tsx
+
+# Generate a utility function (lib context)
+pdd --local --force --context lib sync api
+# → app/lib/api.ts
+
+# Generate helpers (utils context)
+pdd --local --force --context utils sync formatters
+# → app/utils/formatters.ts
+
+# Generate a React hook (hooks context)
+pdd --local --force --context hooks sync useCounter
+# → app/hooks/useCounter.tsx
+```
+
+### List Available Contexts
+
+```bash
+pdd --list-contexts
+```
+
+### Alternative: Manual Output Path
+
+For one-off custom paths, use `--output`:
+
+```bash
+pdd generate prompts/MyComponent_TypeScriptReact.prompt --output app/custom/path/MyComponent.tsx
+```
+
 ## 🔄 Regenerating Components
 
 When requirements change, update the prompt and regenerate:
@@ -283,8 +332,11 @@ When requirements change, update the prompt and regenerate:
 vim prompts/Counter_TypeScriptReact.prompt
 
 # 2. Regenerate with sync --force
-# Files regenerate directly in app/components/
+# Files regenerate directly to their context's output path
 pdd --local --force sync Counter
+
+# Or regenerate to a different location
+pdd --local --force --context utils sync Counter
 ```
 
 ## 🧪 Testing
@@ -313,9 +365,20 @@ bun run storybook
 
 This is an example project demonstrating PDD methodology. To extend it:
 
-1. Create new prompt files in `prompts/` using `ComponentName_TypeScriptReact.prompt` naming
-2. Generate components with `pdd --local --force sync ComponentName`
-3. Files generate directly in `app/components/` - no copying needed!
+1. Create new prompt files in `prompts/` using appropriate naming:
+   - Components: `ComponentName_TypeScriptReact.prompt`
+   - Utils/Lib: `functionName_typescript.prompt`
+   - Hooks: `useHookName_TypeScriptReact.prompt`
+
+2. Generate with the appropriate context:
+   ```bash
+   pdd --local --force sync ComponentName              # → app/components/
+   pdd --local --force --context lib sync myUtil       # → app/lib/
+   pdd --local --force --context hooks sync useMyHook  # → app/hooks/
+   ```
+
+3. Files generate directly to their context location - no copying needed!
+
 4. Stories and tests are generated together with the component (dev unit principle)
 
 ## 📄 License
@@ -325,20 +388,21 @@ This example is part of the PDD project and follows the same MIT license.
 ## ⚡️ Quick Reference
 
 ```bash
-# Generate component with sync (component + stories + tests)
-pdd --local --force sync YourComponent
+# List available contexts
+pdd --list-contexts
 
-# Prompt file: prompts/YourComponent_TypeScriptReact.prompt
-# Generates directly to:
-#   app/components/YourComponent.tsx
-#   app/components/YourComponent.stories.tsx
-#   app/components/__tests__/YourComponent.test.tsx
+# Generate to different locations using contexts
+pdd --local --force sync YourComponent           # default → app/components/
+pdd --local --force --context lib sync api       # lib → app/lib/
+pdd --local --force --context utils sync helpers # utils → app/utils/
+pdd --local --force --context hooks sync useAuth # hooks → app/hooks/
 
-# Run NextJS dev server
-bun run dev
+# Manual output path (one-off)
+pdd generate prompts/MyFile_typescript.prompt --output app/custom/path/
 
-# Run Storybook
-bun run storybook
+# Run development
+bun run dev      # NextJS dev server
+bun run storybook # Storybook on :6006
 
 # Build everything
 bun run build && bun run build-storybook

@@ -1,11 +1,42 @@
 # .pddrc - PDD Configuration for NextJS React Starter
 version: "1.0"
 contexts:
+  # Components context (default)
   default:
     defaults:
       generate_output_path: "app/components/"
       test_output_path: "app/components/__tests__/"
       example_output_path: "examples/"
+      default_language: "TypeScriptReact"
+      target_coverage: 80.0
+      strength: 0.75
+
+  # Utility functions context
+  lib:
+    defaults:
+      generate_output_path: "app/lib/"
+      test_output_path: "app/lib/__tests__/"
+      example_output_path: "examples/"
       default_language: "typescript"
+      target_coverage: 80.0
+      strength: 0.75
+
+  # Helper utilities context
+  utils:
+    defaults:
+      generate_output_path: "app/utils/"
+      test_output_path: "app/utils/__tests__/"
+      example_output_path: "examples/"
+      default_language: "typescript"
+      target_coverage: 80.0
+      strength: 0.75
+
+  # Hooks context
+  hooks:
+    defaults:
+      generate_output_path: "app/hooks/"
+      test_output_path: "app/hooks/__tests__/"
+      example_output_path: "examples/"
+      default_language: "TypeScriptReact"
       target_coverage: 80.0
       strength: 0.75
